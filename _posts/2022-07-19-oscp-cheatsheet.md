@@ -9,23 +9,31 @@ keywords: "oscp, cheatsheet"
 Resource collection for OSCP preparation
 
 # Recon
+
 ## Port Scanning
+
 ### NMAP
 
 Options
-> -sC Default Scripts
-> -sV Enumerate version
-> -oA Output to file
-> -v Verbose
-
+```
+-sC Default Scripts
+-sV Enumerate version
+-oA Output to file
+-v Verbose
+```
+Usage Example
 ```
 sudo nmap -sC -sV -oA nmap.output -v
 ```
 
 ## VHost/DNS Discovery
 
-Discover hidden subdomains based on the top 1 Million DNS names: https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/subdomains-top1million-110000.txt
+Discover hidden subdomains based on the top 1 Million DNS names 
+```
+https://raw.githubusercontent.com/danielmiessler/SecLists/master/Discovery/DNS/subdomains-top1million-110000.txt
+```
 
+Usage Example:
 ```
 gobuster vhost -u URL -w subdomains-top1million-110000.txt -t 100 -k
 gobuster dns -d streamio.htb -w subdomains-top1million-110000.txt -t 100
@@ -34,10 +42,15 @@ gobuster dns -d streamio.htb -w subdomains-top1million-110000.txt -t 100
 ## Web Directory Enumeration
 
 ### Wordlist
-Dirbuster wordlists:
-> /usr/share/dirbuster/wordlists/
+Dirbuster wordlists
+```
+/usr/share/dirbuster/wordlists/
+```
+
 IIS directory
-> https://raw.githubusercontent.com/digination/dirbuster-ng/master/wordlists/vulns/iis.txt
+```
+https://raw.githubusercontent.com/digination/dirbuster-ng/master/wordlists/vulns/iis.txt
+```
 
 ### Tools
 
@@ -75,16 +88,34 @@ sudo mount -t nfs HOST_IP:/FOLDER /mnt/FOLDERNAME
 ```
 
 ## SMB
+
 Default Port: 139, 445
 
+### Checklist
+
+- [ ] Enumerate Hostname using nmblookup
+- [ ] Enumerate using crackmapexec
+- [ ] Enumerate Shares
+- [ ] Check Null Sessions
+- [ ] Check for Vulnerabilities
+- [ ] Overall Scan using enum4linux
+
+https://0xdf.gitlab.io/2018/12/02/pwk-notes-smb-enumeration-checklist-update1.html#checklist
+
+#### Enumerate Hostname nmblookup
 Enumerate Hostname using **nmblookup**
 
 Options
-> -A look up by IP address
+```
+-A look up by IP address
+```
+
+Usage Example
 ```
 nmblookup -A IP_ADDR
 ```
 
+#### Enumerate using crackmapexec
 Enumerate whatever we can on the box using crackmapexec
 ```
 crackmapexec smb HOST_IP
@@ -93,7 +124,42 @@ Enumerate the shares
 ```
 crackmapexec smb HOST_IP --shares (Remember to user black username and password using -u "" -p "")
 ```
-Enumerate using smbmap
+
+#### Enumerate Shares
+
+Enumerate Hostname using **smbmap**, **crackmapexec**, **smbclient**, **nmap**
+
 ```
-smbmap -H HOST_IP -u "" -p ""
+smbmap -H [ip] -u "" -p ""
+crackmapexec smb HOST_IP --shares (Remember to user black username and password using -u "" -p "")
+smbclient -L \\\\[ip]
+nmap --script smb-enum-shares -p 139,445 [ip]
+```
+
+Remember to re-run when you get new credentials
+
+#### Check Null Sessions
+
+Check Null Sessions using **smbmap**, **rpcclient**, **smbclient**
+
+```
+smbmap -H [ip/hostname]
+rpcclient -U "" -N [ip]
+smbclient \\\\[ip]\\[share name]
+```
+
+#### Check for Vulnerabilities
+
+Check for Vulnerabilities using **nmap**
+
+```
+nmap --script smb-vuln* -p 139,445 [ip]
+```
+
+#### Overall Scan using enum4linux
+
+Not very efficient but sometimes you can get info such as password policy
+
+```
+enum4linux -a [ip]
 ```
