@@ -180,6 +180,14 @@ Not very efficient but sometimes you can get info such as password policy
 enum4linux -a [ip]
 ```
 
+# Initial Access
+
+## SSH Bruteforce
+
+```
+hydra -l USERNAME -p PASSWORD_LIST IP -t 4 ssh
+```
+
 # Priv Escalation
 
 ## Linux
