@@ -196,4 +196,5 @@ hydra -l USERNAME -p PASSWORD_LIST IP -t 4 ssh
 
 - [ ] Password reuse (mysql, .bash_history, 000- default.conf...)
 - [ ] Checking sudo permissions (sudo -l)
+- [ ] Check binary with SUID set ([https://gtfobins.github.io/](https://gtfobins.github.io/#+suid))
 
