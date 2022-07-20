@@ -186,6 +186,6 @@ enum4linux -a [ip]
 
 ### Checklist
 
-- [ ] Password reuse
+- [ ] Password reuse (mysql, .bash_history, 000- default.conf...)
 - [ ] Checking sudo permissions (sudo -l)
 
