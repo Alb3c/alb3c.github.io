@@ -39,7 +39,7 @@ gobuster vhost -u URL -w subdomains-top1million-110000.txt -t 100 -k
 gobuster dns -d streamio.htb -w subdomains-top1million-110000.txt -t 100
 ```
 
-## Web Directory Enumeration
+## Web Services Enumeration
 
 ### Wordlist
 Dirbuster wordlists
@@ -63,6 +63,22 @@ feroxbuster -u IP -x EXTENSION -w /usr/share/dirbuster/wordlists/directory-list-
 **Dirbuster**
 
 **gobuster**
+
+### Wordpress Scanner
+
+WPScan WordPress Security Scanner
+
+```
+wpscan --url "URL" 
+```
+
+NOTE: Pay attention to the plugin version and check for exploits
+
+WPScan WordPress Security Scanner Enumerate users
+
+```
+wpscan --rua --url <URL> -P <PASSWORDS_LIST> -U "<USER>,<USER>"
+```
 
 ## FTP
 Default Port: 21
@@ -163,3 +179,13 @@ Not very efficient but sometimes you can get info such as password policy
 ```
 enum4linux -a [ip]
 ```
+
+# Priv Escalation
+
+## Linux
+
+### Checklist
+
+- [ ] Password reuse
+- [ ] Checking sudo permissions (sudo -l)
+
