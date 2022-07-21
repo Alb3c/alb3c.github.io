@@ -1,7 +1,7 @@
 # Site settings
 title_left    : "Alb"
 title_right   : "3c" # default: ""
-description   : "Just a security guy..."
+description   : "..."
 keywords      : "alb3c"
 url           : https://alb3c.github.io # site url
 baseurl       : "" # apply repo name like "/myproject" if used under gh-pages branch, else (under master branch) just leave empty/blank
