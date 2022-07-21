@@ -26,6 +26,18 @@ Usage Example
 sudo nmap -sC -sV -oA nmap.output -v
 ```
 
+Full TCP scan
+
+```
+sudo nmap -sC -sV -O -p- -oA nmap.full_tcp 
+```
+
+Full UDP scan
+
+```
+sudo nmap -sU -O -p- -oA nmap.full_udp 
+```
+
 ## VHost/DNS Discovery
 
 Discover hidden subdomains based on the top 1 Million DNS names 
@@ -41,7 +53,25 @@ gobuster dns -d streamio.htb -w subdomains-top1million-110000.txt -t 100
 
 ## Web Services Enumeration
 
+### Checklist
+
+- [ ] Read entire pages. Enumerate for emails, names, user info etc.
+- [ ] Directory discovery
+- [ ] Enum the interface, version of CMS? Server installation page?
+- [ ] Potential vulnerability? LFI, RFI, XEE, Upload?
+- [ ] Default web server page, version information
+- [ ] View source code
+- [ ] Robots.txt
+- [ ] Web scanning
+
+
 ### Wordlist
+
+SecLists
+```
+https://github.com/danielmiessler/SecLists
+```
+
 Dirbuster wordlists
 ```
 /usr/share/dirbuster/wordlists/
