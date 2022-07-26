@@ -110,6 +110,12 @@ WPScan WordPress Security Scanner Enumerate users
 wpscan --rua --url <URL> -P <PASSWORDS_LIST> -U "<USER>,<USER>"
 ```
 
+### Robots.txt
+
+```
+wget --header "User-Agent: Googlebot-Image" http://192.168.98.14/robots.txt
+```
+
 ## FTP
 Default Port: 21
 
