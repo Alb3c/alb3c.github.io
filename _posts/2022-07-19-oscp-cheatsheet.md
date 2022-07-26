@@ -116,6 +116,9 @@ wpscan --rua --url <URL> -P <PASSWORDS_LIST> -U "<USER>,<USER>"
 wget --header "User-Agent: Googlebot-Image" http://192.168.98.14/robots.txt
 ```
 
+### Local File Inclusion
+
+
 ## FTP
 Default Port: 21
 
