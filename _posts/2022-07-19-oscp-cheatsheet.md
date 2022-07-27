@@ -64,7 +64,6 @@ gobuster dns -d streamio.htb -w subdomains-top1million-110000.txt -t 100
 - [ ] Robots.txt
 - [ ] Web scanning
 
-
 ### Wordlist
 
 SecLists
@@ -93,6 +92,16 @@ feroxbuster -u IP -x EXTENSION -w /usr/share/dirbuster/wordlists/directory-list-
 **Dirbuster**
 
 **gobuster**
+
+### CeWL (Custom Word List generator)
+
+CeWL (Custom Word List generator) is a ruby app which spiders a given URL, up to a specified depth, and returns a list of words which can then be used for password crackers such as John the Ripper. Optionally, CeWL can follow external links.
+
+```
+cewl -d 2 -m 5 -w cewl.txt HOST
+```
+
+The output of this tool can be used as input for the Wordpress scanner
 
 ### Wordpress Scanner
 
@@ -237,3 +246,13 @@ hydra -l USERNAME -p PASSWORD_LIST IP -t 4 ssh
 - [ ] Checking sudo permissions (sudo -l)
 - [ ] Check binary with SUID set ([https://gtfobins.github.io/](https://gtfobins.github.io/#+suid))
 
+### Bypass Restricted Shells
+
+https://vk9-sec.com/linux-restricted-shell-bypass/
+
+Restore Env variables:
+
+```
+export PATH=/bin:/usr/bin/:$PATH
+export SHELL=/bin/bash:$SHELL
+```
