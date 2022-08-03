@@ -228,6 +228,15 @@ Not very efficient but sometimes you can get info such as password policy
 enum4linux -a [ip]
 ```
 
+## LDAP
+
+```
+nmap -n -sV --script "ldap* and not brute"
+
+ldapsearch -h <IP> -x -s base
+ldapsearch -h <IP> -x -D '<DOMAIN>\<USER>' -w '<PASSWORD>' -b "DC=<1_SUBDOMAIN>,DC=<TDL>"
+```
+
 ## MySQL
 
 ### nmap Scan
