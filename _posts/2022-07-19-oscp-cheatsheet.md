@@ -183,9 +183,10 @@ Enumerate whatever we can on the box using crackmapexec
 ```
 crackmapexec smb HOST_IP
 ```
-Enumerate the shares
+Enumerate the shares (Remember to test the quest account)
 ```
 crackmapexec smb HOST_IP --shares (Remember to user black username and password using -u "" -p "")
+crackmapexec smb HOST_IP -u 'guest' -p '' --shares
 ```
 
 #### Enumerate Shares
