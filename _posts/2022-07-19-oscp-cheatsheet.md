@@ -295,6 +295,10 @@ https://asecuritysite.com/encryption/ferdecode
 hydra -l USERNAME -p PASSWORD_LIST IP -t 4 ssh
 ```
 
+## Shell stable
+
+https://blog.ropnop.com/upgrading-simple-shells-to-fully-interactive-ttys/
+
 # Priv Escalation
 
 ## Linux
