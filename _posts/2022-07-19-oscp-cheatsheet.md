@@ -337,3 +337,24 @@ Restore Env variables:
 export PATH=/bin:/usr/bin/:$PATH
 export SHELL=/bin/bash:$SHELL
 ```
+
+## Windows 
+
+### Checklist
+
+- [ ] Check priv using the whoami \all 
+
+### JuicyPotato
+
+When you’ve found yourself as a low-level user on a Windows machine, it’s always worthwhile to check what privileges your user account has. If you have the SeImpersonatePrivilege, there is a very simply attack vector that you can leverage to gain SYSTEM level access.
+https://infinitelogins.com/2020/12/09/windows-privilege-escalation-abusing-seimpersonateprivilege-juicy-potato/
+
+Executable:
+```
+https://github.com/ohpe/juicy-potato
+.\JuicyPotato.exe -t * -p c:\path\to\executable.bat -l 9002
+```
+
+
+
+
