@@ -340,6 +340,67 @@ export SHELL=/bin/bash:$SHELL
 
 ## Windows 
 
+### Enumerate
+
+#### Enumerating the Operating System Version and Architecture
+
+```
+systeminfo | findstr /B /C:"OS Name" /C:"OS Version" /C:"System Type"
+```
+
+#### Enumerating Running Processes and Services
+
+```
+tasklist /SVC
+```
+
+#### Enumerating Networking Information
+
+```
+ipconfig /all
+
+# Check if firewall is UP
+netsh advfirewall show currentprofile
+
+# Check Firewall rules
+netsh advfirewall firewall show rule name=all
+```
+
+#### Enumerating Scheduled Tasks
+
+```
+schtasks /query /fo LIST /v
+```
+
+#### Enumerating Readable/Writable Files and Directories
+
+```
+# Check for files that are world writable
+accesschk.exe \accepteula -uws "Everyone" "C:\Program Files"
+# Using powershell:
+Get-ChildItem "C:\Program Files" -Recurse | Get-ACL | ?{$_.AccessToString -match "Everyone\sAllow\s\sModify"}
+```
+
+#### Enumerating Binaries That AutoElevate
+
+on Windows systems, we should check the status of the AlwaysInstallElevated registry setting. If this key is enabled (set to 1) in either HKEY_CURRENT_USER or HKEY_LOCAL_MACHINE, any user can run Windows Installer packages with elevated privileges.
+
+We can use reg query to check these settings:
+```
+c:\Users\student>reg query HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Installer
+
+HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Installer
+    AlwaysInstallElevated    REG_DWORD    0x1
+
+
+c:\Users\student>reg query HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\Installer
+
+HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\Installer
+    AlwaysInstallElevated    REG_DWORD    0x1
+```
+
+If this setting is enabled, we could craft an MSI file and run it to elevate our privileges.
+
 ### Checklist
 
 - [ ] Check priv using the whoami \all (SeImpersonatePrivilege then JoucyPotato!)
