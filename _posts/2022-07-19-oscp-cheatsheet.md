@@ -342,7 +342,14 @@ export SHELL=/bin/bash:$SHELL
 
 ### Checklist
 
-- [ ] Check priv using the whoami \all 
+- [ ] Check priv using the whoami \all (SeImpersonatePrivilege then JoucyPotato!)
+- [ ] If Windows XP SP0/SP1 then Service Explotation
+
+### Tools
+
+Accesschk with accepteula:
+
+https://xor.cat/2017/09/05/sysinternals-accesschk-accepteula/
 
 ### Windows XP SP0/SP1 PrivEscalation
 
@@ -523,6 +530,7 @@ C:\> net start upnphost
 ### JuicyPotato
 
 When you’ve found yourself as a low-level user on a Windows machine, it’s always worthwhile to check what privileges your user account has. If you have the SeImpersonatePrivilege, there is a very simply attack vector that you can leverage to gain SYSTEM level access.
+
 https://infinitelogins.com/2020/12/09/windows-privilege-escalation-abusing-seimpersonateprivilege-juicy-potato/
 
 Executable:
