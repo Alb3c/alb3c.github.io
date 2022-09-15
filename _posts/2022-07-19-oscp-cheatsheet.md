@@ -228,6 +228,18 @@ Not very efficient but sometimes you can get info such as password policy
 enum4linux -a [ip]
 ```
 
+#### Dump an SMB Share
+
+```
+└─$ smbclient -U 'guest' \\\\IP\\SHARE
+Password for [WORKGROUP\guest]:
+Try "help" to get a list of possible commands.
+smb: \> mask ""
+smb: \> recurse
+smb: \> prompt
+smb: \> mget *
+```
+
 ## LDAP
 
 ```
@@ -342,10 +354,21 @@ export SHELL=/bin/bash:$SHELL
 
 ### Enumerate
 
+#### Enumerating User Permissions
+
+```
+whoami \all
+```
+
+##### Important Permissions
+
+SeImpersonatePrivilege -> JuicyPotato
+SeChangeNotifyPrivilege -> Read folder of other users
+
 #### Enumerating the Operating System Version and Architecture
 
 ```
-systeminfo | findstr /B /C:"OS Name" /C:"OS Version" /C:"System Type"
+systeminfo | findstr /B /C:"OS Name" /C:"OS Version" /C:"System Type" /C:"Domain" /C:"Logon Server" /C:"Host Name"
 ```
 
 #### Enumerating Running Processes and Services
