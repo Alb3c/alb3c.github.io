@@ -697,6 +697,10 @@ https://github.com/ohpe/juicy-potato
 .\JuicyPotato.exe -t * -p c:\path\to\executable.bat -l 9002
 ```
 
+### Mimikatz
+
+https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Mimikatz.md
+
 
 
 
